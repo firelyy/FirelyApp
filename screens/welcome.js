@@ -33,7 +33,7 @@ var WelcomeView = React.createClass({
         </View>
         <View style={styles.row}>    
           <TouchableHighlight onPress={this._getProtectedQuote} style={styles.button}>
-            <Text style={styles.buttonText}>Get http://45.79.191.91:3000/</Text>
+            <Text style={styles.buttonText}>Get http://localhost:3000/</Text>
           </TouchableHighlight>
         </View>
       </View>

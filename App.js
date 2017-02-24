@@ -42,7 +42,7 @@ class HomeScreen extends React.Component {
 
   async _getProtectedQuote() {
     var DEMO_TOKEN = await AsyncStorage.getItem(STORAGE_KEY);
-    fetch("http://45.79.191.91:3000/", {
+    fetch("http://localhost:3000/", {
       method: "GET",
       headers: {
         'Authorization':  DEMO_TOKEN,
@@ -79,7 +79,7 @@ class HomeScreen extends React.Component {
   _userSignup() {
     var value = this.refs.form.getValue();
     if (value) { 
-      fetch("http://45.79.191.91:3000/users", {
+      fetch("http://localhost:3000/users", {
         method: "POST", 
         headers: {
           'Content-Type': 'application/json'
@@ -118,7 +118,7 @@ class HomeScreen extends React.Component {
   _userLogin() { 
     var value = this.refs.form.getValue();
     if (value) { 
-      fetch("http://45.79.191.91:3000/authenticate", {
+      fetch("http://localhost:3000/authenticate", {
         method: "POST", 
         headers: {
           'Content-Type': 'application/json'
