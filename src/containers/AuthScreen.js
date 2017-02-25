@@ -1,31 +1,53 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
   AppRegistry,
-  AsyncStorage,
   StyleSheet,
   Text,
   View,
+  Image,
   TouchableHighlight,
-  AlertIOS,
+  AlertIOS
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
-
-const styles = require('./styles.js')
+import ApiUtils from '../../src/utilities/ApiUtils'
 
 var t = require('tcomb-form-native');
-import ApiUtils from './ApiUtils'
-import Welcome from './screens/welcome'
-
 var STORAGE_KEY = 'auth_token';
 var Form = t.form.Form;
 var Person = t.struct({
   cell: t.String,
   password: t.String
 });
-
 const options = {};
 
-class HomeScreen extends React.Component {
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#ffffff',
+  },
+  title: {
+    fontSize: 30,
+    alignSelf: 'center',
+    marginBottom: 30
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center'
+  },
+  button: {
+    height: 36,
+    backgroundColor: '#48BBEC',
+    borderColor: '#48BBEC',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignSelf: 'stretch',
+    justifyContent: 'center'
+  },
+});
+
+class AuthScreen extends React.Component {
 
   static navigationOptions = {
     title: 'login',
@@ -35,42 +57,6 @@ class HomeScreen extends React.Component {
   async _onValueChange(item, selectedValue) {
     try {
       await AsyncStorage.setItem(item, selectedValue);
-    } catch (error) {
-      console.log('AsyncStorage error: ' + error.message);
-    }
-  }
-
-  async _getProtectedQuote() {
-    var DEMO_TOKEN = await AsyncStorage.getItem(STORAGE_KEY);
-    fetch("http://localhost:3000/", {
-      method: "GET",
-      headers: {
-        'Authorization':  DEMO_TOKEN,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(ApiUtils.checkStatus)
-    .then((response) => {
-      console.log(response)
-      return response.json()})
-    .then((response) => { 
-      AlertIOS.alert(
-        "User response:", JSON.stringify(response))
-    })
-    .catch((error) => {
-      console.log(error);
-      AlertIOS.alert(
-        "Error!",
-        DEMO_TOKEN
-        )
-    })
-    .done();
-  }
-
-  async _userLogout() {
-    try {
-      await AsyncStorage.removeItem(STORAGE_KEY);
-      AlertIOS.alert("Logout Success!")
     } catch (error) {
       console.log('AsyncStorage error: ' + error.message);
     }
@@ -99,10 +85,8 @@ class HomeScreen extends React.Component {
       .then((responseData) => {
         console.log(responseData);
         this._onValueChange(STORAGE_KEY, responseData.auth_token),
-        AlertIOS.alert(
-          "Signup Success!",
-          JSON.stringify(responseData)
-          )
+        this.props.navigation.navigate('Home')
+
       })
       .catch((error) => {
         console.log(error);
@@ -130,12 +114,9 @@ class HomeScreen extends React.Component {
       })
       .then(ApiUtils.checkStatus)
       .then((response) => response.json())
-      .then((responseData) => {
-        AlertIOS.alert(
-          "Login Success!",
-          "Word Up..."
-          ),
-        this._onValueChange(STORAGE_KEY, responseData.auth_token)
+      .then((responseData)=>{
+        this._onValueChange(STORAGE_KEY, responseData.auth_token),
+        this.props.navigation.navigate('Home')
       })
       .catch((error) => {
         console.log(error);
@@ -148,18 +129,10 @@ class HomeScreen extends React.Component {
     } 
   }
 
-  _Welcome() {
-    navigator.push({
-      title: 'Welcome'
-    });
-  }
-
-
   render() {
     const { navigate } = this.props.navigation;
 
     return (
-    
 
       <View style={styles.container}>
         <View style={styles.row}>
@@ -179,38 +152,13 @@ class HomeScreen extends React.Component {
           <TouchableHighlight style={styles.button} onPress={this._userLogin.bind(this)} underlayColor='#99d9f4'>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.button} onPress={() => navigate('LoggedIn')} underlayColor='#99d9f4'>
-            <Text style={styles.buttonText}>Test Button</Text>
-          </TouchableHighlight>
         </View>
       </View>
 
-
       );
-
-
 
 };
 
 }
 
-class LoggedInScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Logged In',
-  };
-  render() {
-    return (
-      <View>
-        <Text>You're logged in!</Text>
-      </View>
-    );
-  }
-}
-
-const firelyApp = StackNavigator({
-  Home: { screen: HomeScreen },
-  LoggedIn: { screen: LoggedInScreen },
-});
-
-
-AppRegistry.registerComponent('firelyApp', () => firelyApp);
+export { AuthScreen as default};
