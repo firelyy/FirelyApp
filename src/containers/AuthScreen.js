@@ -10,42 +10,14 @@ import {
 } from 'react-native';
 import ApiUtils from '../../src/utilities/ApiUtils'
 
-var t = require('tcomb-form-native');
-var STORAGE_KEY = 'auth_token';
-var Form = t.form.Form;
-var Person = t.struct({
+import t from 'tcomb-form-native';
+const STORAGE_KEY = 'auth_token';
+const Form = t.form.Form;
+const Person = t.struct({
   cell: t.String,
   password: t.String
 });
 const options = {};
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#ffffff',
-  },
-  title: {
-    fontSize: 30,
-    alignSelf: 'center',
-    marginBottom: 30
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    alignSelf: 'center'
-  },
-  button: {
-    height: 36,
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
-  },
-});
 
 class AuthScreen extends React.Component {
 
@@ -63,7 +35,7 @@ class AuthScreen extends React.Component {
   }
 
   _userSignup() {
-    var value = this.refs.form.getValue();
+    let value = this.refs.form.getValue();
     if (value) { 
       fetch("http://localhost:3000/users", {
         method: "POST", 
@@ -100,7 +72,7 @@ class AuthScreen extends React.Component {
   }
 
   _userLogin() { 
-    var value = this.refs.form.getValue();
+    let value = this.refs.form.getValue();
     if (value) { 
       fetch("http://localhost:3000/authenticate", {
         method: "POST", 
@@ -135,17 +107,17 @@ class AuthScreen extends React.Component {
     return (
 
       <View style={styles.container}>
-        <View style={styles.row}>
+        <View style={styles.row1}>
           <Text style={styles.title}>fire.ly</Text>
         </View>
-        <View style={styles.row}>
+        <View style={styles.row2}>
           <Form
           ref="form"
           type={Person}
           options={options}
           />
         </View>  
-        <View style={styles.row}>
+        <View style={styles.row3}>
           <TouchableHighlight style={styles.button} onPress={this._userSignup.bind(this)} underlayColor='#99d9f4'>
             <Text style={styles.buttonText}>Signup</Text>
           </TouchableHighlight>
@@ -156,9 +128,58 @@ class AuthScreen extends React.Component {
       </View>
 
       );
+}
 
-};
 
 }
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+
+  },
+  title: {
+    fontSize: 30,
+    alignSelf: 'center',
+    marginBottom: 30
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center'
+  },
+  button: {
+    height: 36,
+    backgroundColor: '#48BBEC',
+    borderColor: '#48BBEC',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 5,
+    marginBottom: 5,
+    alignSelf: 'stretch',
+    justifyContent: 'center'
+  },
+  row1: {
+    // backgroundColor: 'red',
+    // flex: 0
+
+  },
+  row2: {
+    // backgroundColor: 'blue',
+    // flex: 0
+
+  },
+  row3: {
+    // backgroundColor: 'green',
+    // flex: 1,
+    justifyContent: 'center'
+
+  },
+});
+
 
 export { AuthScreen as default};
